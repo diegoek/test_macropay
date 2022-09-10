@@ -41,6 +41,30 @@ router.all('/byId/:id', (req, res,next) => {
     next();
 });
 
+router.all('/filter/:frase', (req, res,next) => {
+    if (req.method === "GET") {
+        let frase = req.params.frase;
+        var result = [];
+        data.forEach(element =>{
+            var fraseMayus = frase.toLowerCase();
+            var cadenaMayus = element.name.toLowerCase();
+            var filter = cadenaMayus.indexOf(fraseMayus);
+            if(filter >= 0){
+                result.push(element);
+            }
+        })
+        if (result != null){ 
+            res.send(result);
+            res.status(200);
+        }
+        else
+            res.status(404).json({ "error": " Not Found" });
+    } else{
+        res.status(405).json({ "error": " Method Not Allowed " });
+    }
+    next();
+});
+
 router.all('/insert', (req, res, next) => {
     if (req.method === "POST") {
         const { id, name, phone, addressLines = [] } = req.body;
